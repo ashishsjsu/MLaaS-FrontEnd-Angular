@@ -1,0 +1,210 @@
+<div class="wrapper" style="background: #F3F3F3">
+    <body-header></body-header>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper" style="margin-left: 0"> <!-- This inline style removes the sidebar -->
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+          Machine Learning as a Service
+            <small>Everything you need for big data analytics</small>
+          </h1>
+          <!--<ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+            <li class="active">Here</li>
+          </ol>-->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+          <!-- Your Page Content Here -->
+
+          <div class="row">
+            <div class="col-md-8">
+                            <!-- Container: Upload Dataset -->
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Upload Dataset</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <div class="table-responsive">
+                    <table class="table no-margin">
+                      <tbody>
+                        <tr>
+                            <!-- file-model is a directive -->
+                            <input type="file" file-model="homeVm.myFile" class="upload-form-control" id="fileupload" style="display:inline"/>
+                            <input type="submit" class="btnUpload btn btn-info btn-sm" ng-click="homeVm.uploadMedia()" value="Upload"></input>
+                            <br>
+                            <br>
+                            <!-- The global progress bar -->
+                            <div id="progress">
+                                <div ng-show="homeVm.progressVisible">
+                                    <div>{{homeVm.progress}}%</div>
+                                    <progress value="{{homeVm.progress}}" max="100"></progress>
+                                </div>
+                            </div>
+                            <!-- The container for the uploaded files -->
+                            <div id="files" class="files"></div>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div><!-- /.table-responsive -->
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <!--<a href="javascript::;" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+                  <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>-->
+                </div><!-- /.box-footer -->
+              </div><!-- /.box -->
+
+                <div class="box box-warning">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Sample View</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <div class="table-responsive">
+                    <table class="table no-margin data-table">
+                        <thead>
+                            <th ng-repeat="col in homeVm.sampleData.meta.fields">{{col}}</th>
+                        </thead>
+                        <tbody >
+                            <tr ng-repeat="row in homeVm.sampleData.data">
+                                <td ng-repeat="cell in row">{{cell}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div><!-- /.table-responsive -->
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                  <!--<a href="javascript::;" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
+                  <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>-->
+                </div><!-- /.box-footer -->
+              </div><!-- /.box -->
+
+
+
+            </div>
+
+            <div class="col-md-4">
+              <div class="box box-info">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Data Sources</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                  </div>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <ul class="todo-list ui-sortable" ng-repeat="datasource in homeVm.datasourceList.data">
+                    <li style="padding: 0; background: white"><a href="#" ng-click="homeVm.showSampleData(this)">{{datasource.filename}}</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="box box-success">
+                      <div class="box-header with-border">
+                          <h3 class="box-title">Raw Statistics</h3>
+                          <div class="box-tools pull-right">
+                              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                          </div>
+                      </div> <!-- box header -->
+                      <div class="box-body">
+                          <div class="form-group">
+                              <h5 class="box-title">Select data source:</h5>
+                              <select class="form-control datasource-select" id="datasource-select" ng-model="homeVm.selectDatasource" ng-options="datasource.filename as datasource.filename for datasource in homeVm.datasourceList.data">
+                                  <option value=""><---------- Select data source ----------></option>
+                              </select>
+                          </div>
+                          <button class="btn btn-warning btn-flat btn-block btnStats" ng-click="homeVm.generateRawStatistics()">Statistics</button>
+                      </div>
+              </div>
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Raw Statistics Chart</h3>
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
+                    </div> <!-- box header -->
+                    <div class="box-body">
+
+                        <highchart id="chart1" config="homeVm.chartConfig" class="span10"></highchart>
+
+                    </div>
+                </div>
+            </div><!-- col-md-4 -->
+          </div><!-- row -->
+
+          <div class="row">
+            <div class="col-md-12">
+                  <!-- Include task-history block -->
+                <div class="box box-success">
+                   <div class="box-header with-border">
+                      <h3 class="box-title">Task history</h3>
+                      <div class="box-tools pull-right">
+                         <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-history-icon"></i>
+                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                      </div>
+                   </div>
+                   <!-- /.box-header -->
+                   <div class="box-body">
+                      <div class="table-responsive">
+                         <table class="table no-margin task-history">
+                            <thead>
+                               <th>Select</th>
+                               <th>Task Type</th>
+                               <th>Task Id</th>
+                               <th>Task Status URL</th>
+                               <th>Dataset</th>
+                               <th>Created</th>
+                            </thead>
+
+                            <tbody>
+
+                            </tbody>
+                         </table>
+                      </div>
+                   </div>
+                  </div>       <!-- Task History Box-->
+            </div>
+          </div> <!-- row -->
+
+          <div class="row">
+            <div class='col-md-12'>
+              <!-- Include raw stats results block -->
+              <div class="box box-danger">
+                  <div class="box-header with-border">
+                    <h3 class="box-title">Raw Statistics Results</h3>
+                    <div class="box-tools pull-right">
+                       <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-raw-result-icon"></i>
+                       <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                  </div>
+                  <!-- /.box-header -->
+                  <div class="box-body">
+                    <div class="table-responsive raw-stats-block">
+                       <div class="col-md-5">
+                          <table class="table task-result">
+                             <thead>
+                                <th>Column</th>
+                                <th>Unique Values</th>
+                             </thead>
+                             <tbody>
+                                <tr>
+                                </tr>
+                             </tbody>
+                          </table>
+                       </div>
+                    </div>
+                  </div>
+                  </div>
+           </div>
+          </div>
+
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+
+    </div><!-- ./wrapper -->

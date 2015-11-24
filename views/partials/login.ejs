@@ -1,0 +1,31 @@
+<div class="login-box" ng-controller="loginController as userVm">
+    <div class="login-logo">
+        <a href="/"><b>MLaaS</b></a>
+    </div>
+    <div class="login-box-body">
+        <p class="login-box-msg">User Login</p>
+
+        <form name="loginForm" ng-submit="userVm.login()">
+            <div class="form-group icon-support form-row">
+                <div class="item control-label">Username</div>
+                <input type="text" class="form-control" ng-model="userVm.user.username">
+                <!--<span class="glyphicon glyphicon-user glyphicon-custom-position"></span>-->
+            </div>
+            <div class="form-group icon-support form-row">
+                <div class="item control-label">Password</div>
+                <input type="password" class="form-control" ng-model="userVm.user.password">
+            </div>
+            <div class="signup-footer">
+                <input class="btn btn-submit" type="submit" value="Sign In" />
+            </div>
+        </form>
+        <div class="login-box-anchor">
+            <a ng-click="showModal($event)">forgot password ?? click here..</a>
+            <a>  |  </a>
+            <a href="/index#/register">Sign Up</a>
+        </div>
+        <div>
+            <span ng-show="userVm.isError">Invalid ID or password</span>
+        </div>
+    </div>
+</div>

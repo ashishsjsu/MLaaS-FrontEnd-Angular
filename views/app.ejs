@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MLaaS</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <meta name="og:description" content="A platform to enable business analysts, investigators and independent researchers to perform data analytics on demand. Linkage development is an unparalleled feature." />
+        <meta name="og:author" content="MLaaS" />
+        <meta name="og:title" content="Machine Learning as a Service" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="og:keywords" content="education, team, teams, management, team management, website, responsive" />
+
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <!-- Ionicons -->
+         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link rel="stylesheet" href="/stylesheets/skins/skin-blue.min.css">
+    
+        <script src="/bower_components/jquery/dist/jquery.js"></script>
+        <script src="/bower_components/angular/angular.min.js"></script>
+        <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="/bower_components/angular-material/angular-material.min.js"></script>
+        <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+        <script src="/bower_components/angular-aria/angular-aria.min.js"></script>
+        <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
+
+        <script src="javascripts/module/angularapp.js"></script>
+        <script src="javascripts/config/applicationNg.js"></script>
+
+        <script src="javascripts/user/loginController.js"></script>
+        <script src="javascripts/user/registerController.js"></script>
+        <script src="javascripts/user/userService.js"></script>
+
+        <script src="javascripts/home/homeController.js"></script>
+        <script src="javascripts/home/homeService.js"></script>
+
+        <script src="javascripts/header/headDirective.js"></script>
+
+        <script src="javascripts/common/uploadDirective.js"></script>
+
+        <!-- load papaparse.js -->
+        <script src="javascripts/resources/papaparse.js"></script>
+        <!-- Include highcharts -->
+        <script src="javascripts/resources/highcharts.js"></script>
+        <script src="/bower_components/highcharts-ng/dist/highcharts-ng.min.js"></script>
+
+
+        <!-- Stylesheets -->
+        <link href='https://fonts.googleapis.com/css?family=Lato:400,100,300,700,900' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css"/>
+        <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel='stylesheet' href='/stylesheets/problem.css'>
+        <link rel='stylesheet' href='/stylesheets/sidebars.css' />
+        <link rel='stylesheet' href='/stylesheets/header.css' />
+    </head>
+    <body ng-app="myApp" class="hold-transition skin-blue sidebar-mini">
+        <ui-view></ui-view>
+    </body>
+</html>
