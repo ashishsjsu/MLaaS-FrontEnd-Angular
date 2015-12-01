@@ -57,8 +57,6 @@ router.get('/', function(req, res, next){
  * This route saves the data source and/or updates the metadata for the data source uploaded by the user
  */
 router.post('/', function(req, res, next) {
-    var file = req.body;
-    console.log(req.body);
     // get column names from the req body
     var columns = JSON.parse(req.body.columns);
 
@@ -70,12 +68,11 @@ router.post('/', function(req, res, next) {
         'username': req.body.username,
         'filename': req.body.filename,
         'date': req.body.date
-    }
+    };
     // create an instance of file schema
     var files = new FileSchema(file);
     // save the data source / file object
     files.save(files, function(err, doc){
-
         if(err){
             console.log(err);
             res.json(err);

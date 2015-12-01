@@ -13,13 +13,42 @@
     function homeService($http, $localStorage){
 
         var homeObject = {
-            datasourceList: []
+            datasourceList: [],
+            taskHistoryList: []
         };
 
         homeObject.getSignedS3Request = getSignedS3Request;
         homeObject.getDatasourceList = getDatasourceList;
         homeObject.parsePartialFile = parsePartialFile;
         homeObject.updateFileMetadata = updateFileMetadata;
+        homeObject.getRawDataStatistics = getRawDataStatistics;
+        homeObject.getTaskHistoryList = getTaskHistoryList;
+        homeObject.getTaskResults = getTaskResults;
+
+
+        /**
+         * This method retrieves results for a task provided task tracking url is valid
+         */
+        function getTaskResults(statusUrl) {
+            var url = statusUrl;
+            return $http.get(url);
+        }
+
+        /**
+         * This method retrieves task history list for a user
+         */
+        function getTaskHistoryList() {
+            var url = "/tasks?user=" + $localStorage.user.username;
+            return $http.get(url).then(getTaskHistoryResponse);
+        }
+
+        /**
+         * This method makes a request to server to generate statistics on the raw dataset
+         */
+        function getRawDataStatistics(datasource) {
+            var url = "/tasks?type=rawstatistics";
+            return $http.post(url, {filename: datasource});
+        }
 
         /**
          * This method retrieves a list of data sources for currently logged in user
@@ -27,7 +56,6 @@
         function getDatasourceList() {
             var url = '/datasource/?user=' + $localStorage.user.username;
             return $http.get(url).then(getDatasourceResponse);
-            //return $http.get(url);
         }
 
         /**
@@ -116,6 +144,21 @@
                 console.log("Error: " + response.data);
             }
 
+            return response;
+        }
+
+        /**
+         * returns response from getTaskHistoryService
+         * @param response
+         */
+        function getTaskHistoryResponse(response) {
+            if(!response.data.isError) {
+                //copy list of task objects into an array
+                angular.copy(response.data, homeObject.taskHistoryList);
+            }
+            else {
+                console.log("Error: " + response.data);
+            }
             return response;
         }
 

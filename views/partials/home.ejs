@@ -37,7 +37,7 @@
                         <tr>
                             <!-- file-model is a directive -->
                             <input type="file" file-model="homeVm.myFile" class="upload-form-control" id="fileupload" style="display:inline"/>
-                            <input type="submit" class="btnUpload btn btn-info btn-sm" ng-click="homeVm.uploadMedia()" value="Upload"></input>
+                            <input type="submit" class="btnUpload btn btn-info btn-sm" ng-click="homeVm.uploadMedia()" value="Upload" />
                             <br>
                             <br>
                             <!-- The global progress bar -->
@@ -101,7 +101,7 @@
                 </div><!-- /.box-header -->
                 <div class="box-body">
                   <ul class="todo-list ui-sortable" ng-repeat="datasource in homeVm.datasourceList.data">
-                    <li style="padding: 0; background: white"><a href="#" ng-click="homeVm.showSampleData(this)">{{datasource.filename}}</a></li>
+                    <li style="padding: 0; background: white"><a href="" ng-click="homeVm.showSampleData(this)">{{datasource.filename}}</a></li>
                   </ul>
                 </div>
               </div>
@@ -122,55 +122,8 @@
                           <button class="btn btn-warning btn-flat btn-block btnStats" ng-click="homeVm.generateRawStatistics()">Statistics</button>
                       </div>
               </div>
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Raw Statistics Chart</h3>
-                        <div class="box-tools pull-right">
-                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                        </div>
-                    </div> <!-- box header -->
-                    <div class="box-body">
-
-                        <highchart id="chart1" config="homeVm.chartConfig" class="span10"></highchart>
-
-                    </div>
-                </div>
             </div><!-- col-md-4 -->
           </div><!-- row -->
-
-          <div class="row">
-            <div class="col-md-12">
-                  <!-- Include task-history block -->
-                <div class="box box-success">
-                   <div class="box-header with-border">
-                      <h3 class="box-title">Task history</h3>
-                      <div class="box-tools pull-right">
-                         <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-history-icon"></i>
-                         <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                      </div>
-                   </div>
-                   <!-- /.box-header -->
-                   <div class="box-body">
-                      <div class="table-responsive">
-                         <table class="table no-margin task-history">
-                            <thead>
-                               <th>Select</th>
-                               <th>Task Type</th>
-                               <th>Task Id</th>
-                               <th>Task Status URL</th>
-                               <th>Dataset</th>
-                               <th>Created</th>
-                            </thead>
-
-                            <tbody>
-
-                            </tbody>
-                         </table>
-                      </div>
-                   </div>
-                  </div>       <!-- Task History Box-->
-            </div>
-          </div> <!-- row -->
 
           <div class="row">
             <div class='col-md-12'>
@@ -186,14 +139,16 @@
                   <!-- /.box-header -->
                   <div class="box-body">
                     <div class="table-responsive raw-stats-block">
-                       <div class="col-md-5">
+                       <div class="col-md-8">
                           <table class="table task-result">
                              <thead>
                                 <th>Column</th>
                                 <th>Unique Values</th>
                              </thead>
-                             <tbody>
+                             <tbody ng-repeat="(key, value) in homeVm.rawStatistics">
                                 <tr>
+                                    <td><span>{{key}}</span></td>
+                                    <td><span>{{value}}</span></td>
                                 </tr>
                              </tbody>
                           </table>
@@ -203,6 +158,65 @@
                   </div>
            </div>
           </div>
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="box box-danger">
+                      <div class="box-header with-border">
+                          <h3 class="box-title">Raw Statistics Chart</h3>
+                          <div class="box-tools pull-right">
+                              <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                          </div>
+                      </div> <!-- box header -->
+                      <div class="box-body">
+
+                          <highchart id="chart1" config="homeVm.chartConfig" class="span10"></highchart>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Include task-history block -->
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Task history</h3>
+                            <div class="box-tools pull-right">
+                                <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-history-icon"></i>
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table no-margin task-history">
+                                    <thead>
+                                    <th>Select</th>
+                                    <th>Task Type</th>
+                                    <th>Task Id</th>
+                                    <th>Task Status URL</th>
+                                    <th>Dataset</th>
+                                    <th>Created</th>
+                                    </thead>
+
+                                    <tbody ng-repeat="task in homeVm.taskHistory.data">
+                                    <tr>
+                                        <td><input type="checkbox" id="{{task._id}}" /></td>
+                                        <td><span>{{task.tasktype}}</span></td>
+                                        <td><span>{{task.taskid}}</span></td>
+                                        <td><a href="{{task.statusurl}}" target="_blank" ng-click="homeVm.getResults(task.statusurl)">{{task.statusurl}}</a></td>
+                                        <td><span>{{task.datasource}}</span></td>
+                                        <td><span>{{task.created}}</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>       <!-- Task History Box-->
+                </div>
+            </div> <!-- row -->
 
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->

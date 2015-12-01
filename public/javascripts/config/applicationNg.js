@@ -23,7 +23,8 @@ function configure($stateProvider, $urlRouterProvider){
         controllerAs: 'homeVm',
         resolve: {
             isAuthenticated: isAuthenticated,
-            dataSourceProvider: getDatasourceList
+            dataSourceProvider: getDatasourceList,
+            taskHistoryProvider: getTaskHistoryList
         }
     });
 
@@ -41,8 +42,21 @@ function isAuthenticated($localStorage, $location) {
     }
 }
 
+/**
+ * Get the list of datasources for a user
+ * @type {string[]}
+ */
 getDatasourceList.$inject = ['homeService'];
 
 function getDatasourceList(homeService) {
     return homeService.getDatasourceList();
+}
+
+/**
+ * Get the history of tasks for a user
+ * @type {string[]}
+ */
+getTaskHistoryList.inject = ['homeService'];
+function getTaskHistoryList(homeService) {
+    return homeService.getTaskHistoryList();
 }

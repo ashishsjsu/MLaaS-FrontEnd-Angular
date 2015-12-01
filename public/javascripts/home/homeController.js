@@ -7,32 +7,72 @@
     angular.module('myApp')
         .controller('homeController', HomeController);
 
-    HomeController.$inject = ['$scope','homeService', 'dataSourceProvider']
+    HomeController.$inject = ['$scope', '$localStorage', 'homeService', 'dataSourceProvider', 'taskHistoryProvider']
 
-    function HomeController(scope, homeService, dataSourceProvider){
+    function HomeController(scope, localStorage, homeService, dataSourceProvider, taskHistoryProvider){
 
         var self = this;
+
+        // populate variables using the resolve providers
+        self.datasourceList = dataSourceProvider.data;
+        self.taskHistory = taskHistoryProvider.data;
+        // variables
         self.myFile = undefined;
         self.progressVisible = false;
         self.progress = undefined;
-        //the datasource list is initially populated by resolve function
-        self.datasourceList = dataSourceProvider.data;
         self.selectDatasource = "Select";
         self.sampleData = null; //keep it null, don't change to undefined
+        self.rawStatistics = undefined;
         self.chartConfig = {};
         self.chartData = [];
+
+        // functions
         self.uploadMedia = uploadMedia;
+        self.postUploadCleanup = postUploadCleanup;
         self.getDatasourceList = getDatasourceList;
         self.showSampleData = showSampleData;
+        self.configureHighchartsPie = configureHighchartsPie;
         self.generateRawStatistics = generateRawStatistics;
         self.plotRawStatistics = plotRawStatistics;
+        self.getResults = getResults;
 
 
+
+        plotRawStatistics();
         console.log(self.datasourceList);
+
+        /**
+         * This function gets the results of a task from the status url provided
+         * @param statusurl
+         */
+        function getResults(statusUrl){
+            homeService.getTaskResults(statusUrl).then(function(response){
+                var result = JSON.parse(response.data.result);
+                var object = {};
+                for (var key in result) {
+                    if (result.hasOwnProperty(key)) {
+                        object[key] = result[key];
+                    }
+                }
+                self.rawStatistics = object;
+                plotRawStatistics(object);
+            });
+        }
+
+        /**
+         * This method generates statistics for the raw data uploaded by the user
+         */
         function generateRawStatistics() {
             console.log(self.selectDatasource);
             if(self.selectDatasource !== "Select" || self.selectDatasource !== null){
-                // homeService.generateRawStatistics(self.selectDatasource);
+                homeService.getRawDataStatistics(self.selectDatasource).then(function(response){
+                    if(!response.data.isError && response.status == 200){
+                        angular.copy(response.data.data, self.rawStatistics);
+                    }
+                    else{
+                        console.log("Error: " + response.data);
+                    }
+                });
             }
         }
 
@@ -40,18 +80,25 @@
          * This method creates a highchart's pie chart based on raw statistics results
          */
         function plotRawStatistics(results) {
-
-            console.log(results);
-            /*
-            angular.forEach(results.data, function(item, key) {
+            self.configureHighchartsPie();
+            var points = [];
+            angular.forEach(results, function(item, key) {
 
                 var point = {
-                    'name': item,
-                    'y': results[item]
+                    'name': key,
+                    'y': item
                 }
+                points.push(point);
 
-            });*/
+            });
+            self.chartConfig.series.push({data: points});
 
+        }
+
+        /**
+         * Configuration for highchart's pie chart
+         */
+        function configureHighchartsPie() {
             self.chartConfig = {
                 options: {
                     chart: {
@@ -62,7 +109,7 @@
                     }
                 },
                 title: {
-                    text: 'Browser market shares. January, 2015 to May, 2015'
+                    text: 'Raw Statistics - Unique values in each column'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -82,21 +129,22 @@
                     }
                 },
                 series: [{
-                    name: 'Brands',
+                    name: 'Raw Statistics',
                     data: [
-                        { name: 'Microsoft Internet Explorer', y: 56.33 },
-                        {
-                            name: 'Chrome',
-                            y: 24.03,
-                            sliced: true,
-                            selected: true
-                        },
-                        { name: 'Firefox', y: 10.38 },
-                        { name: 'Safari', y: 4.77 }, { name: 'Opera', y: 0.91 },
-                        { name: 'Proprietary or Undetectable', y: 0.2 }
+                        /* { name: 'Microsoft Internet Explorer', y: 56.33 },
+                         {
+                         name: 'Chrome',
+                         y: 24.03,
+                         sliced: true,
+                         selected: true
+                         },
+                         { name: 'Firefox', y: 10.38 },
+                         { name: 'Safari', y: 4.77 }, { name: 'Opera', y: 0.91 },
+                         { name: 'Proprietary or Undetectable', y: 0.2 } */
                     ]
                 }]
             }
+
         }
 
         /**
@@ -107,8 +155,12 @@
             console.log(elem.datasource.filename);
             var filename = elem.datasource.filename;
             var fileurl = "https://cmpe295b-sjsu-bigdatasecurity.s3.amazonaws.com/" + filename;
+            parsePartialFile(fileurl);
+        }
+
+        function parsePartialFile(datasource) {
             // this function is being used to read files from AWS S3
-            Papa.parse(fileurl, {
+            Papa.parse(datasource, {
                 preview: 10,
                 header: true,
                 download: true,
@@ -120,8 +172,7 @@
                     // or if before callback aborted for some reason
                 },
                 complete: function(results) {
-                    //ToDO: bind an object to scope and create a table by iterating over the elements in the object
-                    //populatePartialTable(results.meta.fields, results.data);
+                    // bind sample data to scope
                     self.sampleData = results;
                     // this forces an angular digest loop and hence table is updated immediately
                     scope.$apply();
@@ -178,8 +229,7 @@
                             //if file upload request is completed successfully
                             if (xhr.status === 200) {
                                 console.log("File upload complete");
-                                // parse the samples of file once upload is completed
-                                homeService.parsePartialFile(file);
+                                self.postUploadCleanup(file);
                             }
                         };
                         xhr.onerror = function() {
@@ -197,6 +247,20 @@
                 });
             }
 
+        }
+
+        /**
+         * This is a utility function to carry out all the
+         * @param file: the file uploaded
+         */
+        function postUploadCleanup(file) {
+            //update the datasource dropdown list to reflect the new datasource
+            var item = { username: localStorage.user.username, filename: file.name, columns: []};
+            self.datasourceList.data.push(item);
+            // parse a sample of the file and show it as table
+            parsePartialFile(file);
+            // call factory method to update the file metadata
+            homeService.parsePartialFile(file);
         }
 
         /**
