@@ -6,7 +6,7 @@ var httpStatus = require('http-status-codes');
 
 var mongoose = require('mongoose');
 var UserSchema = mongoose.model('User');
-var FileSchema = mongoose.model('Files');
+var AlgorithmSchema = mongoose.model('Algorithms');
 
 var ensureAuthenticated = require('../modules/ensureAuthenticated');
 
@@ -114,5 +114,25 @@ router.get('/logout', function(req, res){
   res.redirect('/login');
 });
 
+
+// route to get a list of algorithms
+router.get('/algorithms', function(req, res, next) {
+    var object = {};
+
+    AlgorithmSchema.find({}, function(err, data){
+        if(err) {
+            object.isError = true;
+            object.data = err;
+            object.type = httpStatus.OK;
+            response(object, httpStatus.OK, res);
+        }
+        else {
+            object.isError = false;
+            object.data = data;
+            object.type = httpStatus.OK;
+            response(object, httpStatus.OK, res);
+        }
+    });
+});
 
 module.exports = router;

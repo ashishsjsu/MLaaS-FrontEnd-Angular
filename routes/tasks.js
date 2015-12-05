@@ -10,10 +10,10 @@ var q = require('q');
 var router = express.Router();
 
 var mongoose = require('mongoose');
-var UserSchema = mongoose.model('User');
-var FileSchema = mongoose.model('Files');
 var TaskSchema = mongoose.model('Task');
+var AlgorithmSchema = mongoose.model('Algorithms');
 
+// middleware to test user authentication before processing a request on a route
 var ensureAuthenticated = require('../modules/ensureAuthenticated');
 
 /**
@@ -107,8 +107,10 @@ function enqueueTask(type, datasource, taskDocId) {
 
      //update task details
      var update = responsedata;
-     // get username from currently logged in user
-     TaskSchema.update({'_id': taskDocId}, update, function(err, numAffected){
+     // set options to return the updated document
+     var options = {new: true};
+     // use findByIdAndUpdate to return the updated document from the collection
+     TaskSchema.findOneAndUpdate({'_id': taskDocId}, update, options, function(err, doc){
          if(err){
              console.log('Error updating task metadata : ' + err);
              object.isError = true;
@@ -119,10 +121,12 @@ function enqueueTask(type, datasource, taskDocId) {
          else {
             object.isError = false;
             object.data = responsedata;
+            object.data.tasktype = type;
+            object.data.datasource = datasource;
             object.type = httpStatus.OK;
-            deferred.resolve(object);
+            deferred.resolve(doc);
          }
-         console.log(numAffected + " tasks updated!");
+         console.log(doc + " tasks updated!");
      });
     });
 
@@ -152,7 +156,7 @@ router.post('/', function(req, res, next){
  */
 router.get('/', function(req, res, next) {
 
-    TaskSchema.find({'username': req.query.user}, function(err, data){
+    TaskSchema.find({'username': req.query.user}).sort({date: -1}).exec(function(err, data){
         if(err){
             response({'isError': true, data:err}, httpStatus.INTERNAL_SERVER_ERROR, res);
         }

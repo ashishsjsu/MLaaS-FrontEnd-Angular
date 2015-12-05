@@ -11,7 +11,7 @@ var TaskSchema = new mongoose.Schema({
     statusurl: {type: String},
     taskid: {type: String},
     datasource: {type:String},
-    created: {type: String}
+    created: {type: Date}
 });
 
 module.exports = mongoose.model('Task', TaskSchema, 'Task');

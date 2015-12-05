@@ -1,0 +1,49 @@
+<div class="wrapper" style="background: #F3F3F3">
+    <body-header></body-header>
+
+    <div class="content-wrapper">
+        <section class="content">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Data sources</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div> <!-- box header -->
+                        <div class="box-body">
+                            <div class="form-group">
+                                <h5 class="box-title">Select data source:</h5>
+                                <select class="form-control datasource-select" id="datasource-select" ng-model="anaVm.selectDatasource" ng-options="datasource.filename as datasource.filename for datasource in anaVm.datasourceList.data">
+                                    <option value=""><---------- Select data source ----------></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div> <!-- box -->
+                </div><!-- col -->
+
+                <div class="col-md-7">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Algorithms</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div> <!-- box header -->
+                        <div class="box-body">
+                            <div class="form-group">
+                                <h5 class="box-title">Select algorithm</h5>
+                                <select class="form-control datasource-select algorithm-select" ng-change="anaVm.updateAlgorithmSelection()" id="algorithm-select" ng-model="anaVm.selectAlgorithm" ng-options="algorithm.name as algorithm.name for algorithm in anaVm.algorithms.data">
+                                    <option value=""><---------- Select data source ----------></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div> <!-- row -->
+        </section> <!-- content -->
+    </div> <!-- content-wrapper -->
+</div>

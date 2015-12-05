@@ -13,10 +13,8 @@
 
         var self = this;
 
-        // populate variables using the resolve providers
-        self.datasourceList = dataSourceProvider.data;
-        self.taskHistory = taskHistoryProvider.data;
         // variables
+        self.taskHistory = [];
         self.myFile = undefined;
         self.progressVisible = false;
         self.progress = undefined;
@@ -24,9 +22,10 @@
         self.sampleData = null; //keep it null, don't change to undefined
         self.rawStatistics = undefined;
         self.chartConfig = {};
-        self.chartData = [];
 
         // functions
+        self.init = init;
+        self.updateSelection = updateSelection;
         self.uploadMedia = uploadMedia;
         self.postUploadCleanup = postUploadCleanup;
         self.getDatasourceList = getDatasourceList;
@@ -36,10 +35,26 @@
         self.plotRawStatistics = plotRawStatistics;
         self.getResults = getResults;
 
+        // populate variables using the resolve providers
+        self.datasourceList = dataSourceProvider.data;
+        self.taskHistory = taskHistoryProvider.data;
 
-
+        init();
         plotRawStatistics();
         console.log(self.datasourceList);
+
+        function init() {
+            angular.element('.btnStats').css('disabled', true);
+        }
+
+        function updateSelection() {
+            if(self.selectDatasource === 'Select') {
+                angular.element('.btnStats').css('disabled', true);
+            }
+            else {
+                angular.element('.btnStats').css('disabled', false);
+            }
+        }
 
         /**
          * This function gets the results of a task from the status url provided
@@ -60,14 +75,16 @@
         }
 
         /**
-         * This method generates statistics for the raw data uploaded by the user
+         * This method generates a task for statistics for the raw data uploaded by the user
          */
         function generateRawStatistics() {
             console.log(self.selectDatasource);
             if(self.selectDatasource !== "Select" || self.selectDatasource !== null){
                 homeService.getRawDataStatistics(self.selectDatasource).then(function(response){
                     if(!response.data.isError && response.status == 200){
-                        angular.copy(response.data.data, self.rawStatistics);
+                        //angular.copy(response.data.data, self.rawStatistics);
+                        //prepend newly created task to the task history array
+                        self.taskHistory.data.unshift(response.data);
                     }
                     else{
                         console.log("Error: " + response.data);

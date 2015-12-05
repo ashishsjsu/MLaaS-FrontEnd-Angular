@@ -1,0 +1,76 @@
+<div class="wrapper" style="background: #F3F3F3" xmlns="http://www.w3.org/1999/html">
+    <body-header></body-header>
+
+    <div class="col-md-12 case-study-title" style="position: absolute; top: 15%">Drawbridge Cross Device Data Analytics</div>
+
+    <div class="content-wrapper" style="margin-left: 0;">
+        <section class="content" style="padding: 0">
+            <div class="row">
+                <div class="col-md-12 drawbridge-banner">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Device Statistics Chart</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div> <!-- box header -->
+                <div class="box-body">
+
+                    <highchart id="chart1" config="caseStudyVm.getDeviceRawStatistics" class="span10"></highchart>
+
+                    <div>
+                        <table class="table task-result">
+                            <thead>
+                            <th>Parameter</th>
+                            <th>Values</th>
+                            </thead>
+                            <tbody ng-repeat="(key, value) in caseStudyVm.deviceNoPlotValues">
+                            <tr>
+                                <td><span>{{key}}</span></td>
+                                <td><span>{{value}}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Cookies Statistics Chart</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div> <!-- box header -->
+                <div class="box-body">
+
+                    <highchart id="chart2" config="caseStudyVm.getCookieRawStatistics" class="span10"></highchart>
+                    <div>
+                        <table class="table task-result">
+                            <thead>
+                            <th>Parameter</th>
+                            <th>Values</th>
+                            </thead>
+                            <tbody ng-repeat="(key, value) in caseStudyVm.cookieNoPlotValues">
+                            <tr>
+                                <td><span>{{key}}</span></td>
+                                <td><span>{{value}}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

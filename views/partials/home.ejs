@@ -86,9 +86,6 @@
                   <a href="javascript::;" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>-->
                 </div><!-- /.box-footer -->
               </div><!-- /.box -->
-
-
-
             </div>
 
             <div class="col-md-4">
@@ -115,7 +112,7 @@
                       <div class="box-body">
                           <div class="form-group">
                               <h5 class="box-title">Select data source:</h5>
-                              <select class="form-control datasource-select" id="datasource-select" ng-model="homeVm.selectDatasource" ng-options="datasource.filename as datasource.filename for datasource in homeVm.datasourceList.data">
+                              <select class="form-control datasource-select" id="datasource-select" ng-model="homeVm.selectDatasource" ng-change="updateSelection()" ng-options="datasource.filename as datasource.filename for datasource in homeVm.datasourceList.data">
                                   <option value=""><---------- Select data source ----------></option>
                               </select>
                           </div>

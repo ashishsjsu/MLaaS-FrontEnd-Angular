@@ -27,6 +27,28 @@ function configure($stateProvider, $urlRouterProvider){
             taskHistoryProvider: getTaskHistoryList
         }
     });
+    $stateProvider.state('analytics', {
+       url: '/analytics',
+       templateUrl: '/partials/analytics.ejs',
+       controller: 'analyticsController',
+       controllerAs: 'anaVm',
+       resolve: {
+           isAuthenticated: isAuthenticated,
+           dataSourceProvider: getDatasourceList,
+           taskHistoryProvider: getTaskHistoryList,
+           algorithmsProvider: getAlgorithmsList
+       }
+    });
+
+    $stateProvider.state('casestudy', {
+        url: '/casestudy',
+        templateUrl: '/partials/casestudy.ejs',
+        controller: 'caseStudyController',
+        controllerAs: 'caseStudyVm',
+        resolve: {
+            rawStatsProvider: getRawStats
+        }
+    });
 
     $urlRouterProvider.otherwise('login');
 }
@@ -59,4 +81,22 @@ function getDatasourceList(homeService) {
 getTaskHistoryList.inject = ['homeService'];
 function getTaskHistoryList(homeService) {
     return homeService.getTaskHistoryList();
+}
+
+/**
+ * Get a list of algorithms available for analytics
+ * @type {string[]}
+ */
+getAlgorithmsList.$inject = ['analyticsService'];
+function getAlgorithmsList(analyticsService) {
+    return analyticsService.getAlgorithmsList();
+}
+
+/**
+ * Get rw statistics for drawbridge data
+ * @type {string[]}
+ */
+getRawStats.$inject = ['caseStudyService'];
+function getRawStats(caseStudyService) {
+    return caseStudyService.getRawStatistics('drawbridge');
 }

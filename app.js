@@ -21,11 +21,14 @@ mongoose.connect('mongodb://cmpe280:cmpe280@ds051843.mongolab.com:51843/user');
 require('./models/User');
 require('./models/Files');
 require('./models/Task');
+require('./models/Algorithms');
+require('./models/Stats');
 
 
 var index = require('./routes/index');
 var datasource = require('./routes/datasource');
 var tasks = require('./routes/tasks');
+var statistics = require('./routes/stats');
 
 var app = express();
 
@@ -62,6 +65,7 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use('/', index);
 app.use('/datasource', datasource);
 app.use('/tasks', tasks);
+app.use('/stats', statistics);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
