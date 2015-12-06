@@ -18,6 +18,16 @@
         };
 
         caseStudyObject.getRawStatistics = getRawStatistics;
+        caseStudyObject.getMeanStatistics = getMeanStatistics;
+
+
+        function getMeanStatistics(casestudy) {
+            var url = "/stats/mean/";
+            if(casestudy === 'drawbridge') {
+                url = url + 'drawbridge';
+            }
+            return $http.get(url);
+        }
 
         /**
          * Get raw statistics for files in given casestudy
@@ -25,7 +35,7 @@
          * @returns {*}
          */
         function getRawStatistics (casestudy) {
-            var url = "/stats/";
+            var url = "/stats/raw/";
             if(casestudy === 'drawbridge') {
                 url = url + 'drawbridge';
             }

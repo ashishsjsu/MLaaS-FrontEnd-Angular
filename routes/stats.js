@@ -33,9 +33,9 @@ var response = function(message, status, res) {
 /**
  * route to get raw statistics for files in drawbridge case study
  */
-router.get('/drawbridge', function(req, res, next) {
+router.get('/raw/drawbridge', function(req, res, next) {
     var casestudy = req.query.casestudy;
-   StatsSchema.find({'casestudy': 'drawbridge'}, function(err, doc){
+   StatsSchema.find({'casestudy': 'drawbridge', 'statstype': 'raw'}, function(err, doc){
        if(err) {
            console.log(err);
            response({isError: true, data: err, type: httpStatus.INTERNAL_SERVER_ERROR}, httpStatus.OK, res);
@@ -45,6 +45,24 @@ router.get('/drawbridge', function(req, res, next) {
            response({isError: false, data: doc, type: httpStatus.OK}, httpStatus.OK, res);
        }
    });
+});
+
+
+/**
+ * route to get raw statistics for files in drawbridge case study
+ */
+router.get('/mean/drawbridge', function(req, res, next) {
+    var casestudy = req.query.casestudy;
+    StatsSchema.find({'casestudy': 'drawbridge', 'statstype': 'mean'}, function(err, doc){
+        if(err) {
+            console.log(err);
+            response({isError: true, data: err, type: httpStatus.INTERNAL_SERVER_ERROR}, httpStatus.OK, res);
+        }
+        if(doc){
+            console.log(doc[0].values);
+            response({isError: false, data: doc, type: httpStatus.OK}, httpStatus.OK, res);
+        }
+    });
 });
 
 

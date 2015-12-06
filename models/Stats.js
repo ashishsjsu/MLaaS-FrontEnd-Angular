@@ -5,7 +5,9 @@ var StatsSchema = new mongoose.Schema({
     statstype: {type: String},
     filename: {type: String},
     values: [],
-    noplotvalues: []
+    noplotvalues: [],
+    mean: [],
+    std: []
 });
 
 module.exports = mongoose.model('Stats', StatsSchema, 'Stats');
