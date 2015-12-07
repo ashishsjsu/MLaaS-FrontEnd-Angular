@@ -1,0 +1,47 @@
+<section class="content slide" id="sectionSpline">
+
+    <div class="row slide">
+        <div class="col-md-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Random Forest performance evaluation</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div> <!-- box header -->
+
+                <div class="box-body">
+                    <div class="row" >
+                        <div class="col-md-6">
+                            <highchart id="chart3" config="caseStudyVm.splineChart" class="span10"></highchart>
+                        </div>
+
+                        <div class="col-md-6" style="min-height: 400px" id="confusionMatrix">
+                            <div class="box-header" style="text-align: center; margin-bottom: 40px;">
+                                <h3 class="box-title">Confusion Matrix</h3>
+                            </div>
+                            <div class="row cMatrix">
+                                <div class="col-md-3" style="background: rgb(111, 55, 111)">
+                                    <p>{{caseStudyVm.cMatrix.true_positive}}</p>
+                                </div>
+                                <div class="col-md-3" style="background: rgba(35, 68, 128, 0.74)">
+                                    <p>{{caseStudyVm.cMatrix.false_negative}}</p>
+                                </div>
+                            </div>
+                            <div class="row cMatrix">
+                                <div class="col-md-3" style="background: rgba(0, 0, 139, 0.66)">
+                                    <p>{{caseStudyVm.cMatrix.false_positive}}</p>
+                                </div>
+                                <div class="col-md-3" style="background: rgba(117, 8, 8, 0.89)">
+                                    <p>{{caseStudyVm.cMatrix.true_negative}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

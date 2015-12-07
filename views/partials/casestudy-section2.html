@@ -1,0 +1,50 @@
+
+    <div class="row slide">
+        <div class="col-md-12">
+            <div class="box box-primary boxMoreInfo">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Mean and Standard Deviation</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div> <!-- box header -->
+
+                <div class="box-body">
+
+                    <div class="row" >
+
+                        <div class="col-md-6" ng-repeat="data in caseStudyVm.meanStatistics">
+                            <div><h4>{{data.filename}}</h4></div>
+                            <table class="table task-result" style="border: 1px solid #3c8dbc">
+                                <thead>
+                                <th>Parameter/Column</th>
+                                <th>Anonymous_5</th>
+                                <th>Anonymous_6</th>
+                                <th>Anonymous_7</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><h5>Mean</h5></td>
+                                    <td ng-repeat="m in data.mean"><span> {{m.value}} </span></td>
+                                </tr>
+                                <tr>
+                                    <td><h5>Standard deviation</h5></td>
+                                    <td ng-repeat="m in data.std"><span> {{m.value}} </span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="text-align: center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <button class="btn btn-default btn-block" id="btnShowCharts" style="display: block" ng-click="caseStudyVm.getFmeasureRecallSpline()">Explore more...</button>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+

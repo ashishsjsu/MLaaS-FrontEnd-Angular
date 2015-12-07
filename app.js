@@ -23,6 +23,7 @@ require('./models/Files');
 require('./models/Task');
 require('./models/Algorithms');
 require('./models/Stats');
+require('./models/RandomForest');
 
 
 var index = require('./routes/index');
@@ -66,6 +67,7 @@ app.use('/', index);
 app.use('/datasource', datasource);
 app.use('/tasks', tasks);
 app.use('/stats', rawstatistics);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

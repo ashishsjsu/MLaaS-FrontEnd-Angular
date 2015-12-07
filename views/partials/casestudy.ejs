@@ -3,7 +3,7 @@
 
     <div class="col-md-12 case-study-title" style="position: absolute; top: 15%">Drawbridge Cross Device Data Analytics</div>
 
-    <div class="content-wrapper" style="margin-left: 0;">
+    <div class="content-wrapper" style="margin-left: 0; margin-bottom: 250px;">
         <section class="content">
             <div class="row">
                 <div class="col-md-12 drawbridge-banner">
@@ -72,56 +72,104 @@
                 </div>
         </section>
 
-        <section class="content">
-            <div class="row" style="text-align: center">
-                <div class="col-md-3"></div>
-                <div class="col-md-6">
-                    <button class="btn btn-default btn-block" style="display: block" ng-click="caseStudyVm.getMeanStatistics()">Explore more...</button>
-                </div>
-                <div class="col-md-3"></div>
+        <div class="row" style="text-align: center">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <button class="btn btn-default btn-block" id="btnShowMore" style="display: block" ng-click="caseStudyVm.getMeanStatistics()">Explore more...</button>
             </div>
+            <div class="col-md-3"></div>
+        </div>
+        <!--<section class="content" id="sectionMoreInfo">-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-12">-->
+                    <!--<div class="box box-primary boxMoreInfo">-->
+                        <!--<div class="box-header with-border">-->
+                            <!--<h3 class="box-title">Mean and Standard Deviation</h3>-->
+                            <!--<div class="box-tools pull-right">-->
+                                <!--<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
+                            <!--</div>-->
+                        <!--</div> &lt;!&ndash; box header &ndash;&gt;-->
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box box-primary boxMoreInfo">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Mean and Standard Deviation</h3>
-                            <div class="box-tools pull-right">
-                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            </div>
-                        </div> <!-- box header -->
+                        <!--<div class="box-body">-->
 
-                        <div class="box-body">
+                            <!--<div class="row" >-->
 
-                            <div class="row" >
+                                <!--<div class="col-md-6" ng-repeat="data in caseStudyVm.meanStatistics">-->
+                                <!--<div><h4>{{data.filename}}</h4></div>-->
+                                    <!--<table class="table task-result" style="border: 1px solid #3c8dbc">-->
+                                        <!--<thead>-->
+                                            <!--<th>Parameter/Column</th>-->
+                                            <!--<th>Anonymous_5</th>-->
+                                            <!--<th>Anonymous_6</th>-->
+                                            <!--<th>Anonymous_7</th>-->
+                                        <!--</thead>-->
+                                        <!--<tbody>-->
+                                            <!--<tr>-->
+                                                <!--<td><h5>Mean</h5></td>-->
+                                                <!--<td ng-repeat="m in data.mean"><span> {{m.value}} </span></td>-->
+                                            <!--</tr>-->
+                                            <!--<tr>-->
+                                                <!--<td><h5>Standard deviation</h5></td>-->
+                                                <!--<td ng-repeat="m in data.std"><span> {{m.value}} </span></td>-->
+                                            <!--</tr>-->
+                                        <!--</tbody>-->
+                                    <!--</table>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</section>-->
 
-                                <div class="col-md-6" ng-repeat="data in caseStudyVm.meanStatistics">
-                                <div><h4>{{data.filename}}</h4></div>
-                                    <table class="table task-result" style="border: 1px solid #3c8dbc">
-                                        <thead>
-                                            <th>Parameter/Column</th>
-                                            <th>Anonymous_5</th>
-                                            <th>Anonymous_6</th>
-                                            <th>Anonymous_7</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><h5>Mean</h5></td>
-                                                <td ng-repeat="m in data.mean"><span> {{m.value}} </span></td>
-                                            </tr>
-                                            <tr>
-                                                <td><h5>Standard deviation</h5></td>
-                                                <td ng-repeat="m in data.std"><span> {{m.value}} </span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section class="content ng-trans ng-trans-slide-left" ng-include="caseStudyVm.section2"></section>
+
+        <section class="content ng-trans ng-trans-slide-left" ng-include="caseStudyVm.section3"></section>
+
+        <!--<section class="content" id="sectionSpline">-->
+
+            <!--<div class="row">-->
+                <!--<div class="col-md-12">-->
+                    <!--<div class="box box-success">-->
+                        <!--<div class="box-header with-border">-->
+                            <!--<h3 class="box-title">Random Forest performance evaluation</h3>-->
+                            <!--<div class="box-tools pull-right">-->
+                                <!--<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>-->
+                            <!--</div>-->
+                        <!--</div> &lt;!&ndash; box header &ndash;&gt;-->
+
+                        <!--<div class="box-body">-->
+                            <!--<div class="row" >-->
+                                <!--<div class="col-md-6">-->
+                                    <!--<highchart id="chart3" config="caseStudyVm.splineChart" class="span10"></highchart>-->
+                                <!--</div>-->
+
+                                <!--<div class="col-md-6" style="min-height: 400px; padding-top: 100px" id="confusionMatrix">-->
+                                    <!--<div class="row cMatrix">-->
+                                        <!--<div class="col-md-3" style="background: rgb(111, 55, 111)">-->
+                                            <!--<p>{{caseStudyVm.cMatrix.true_positive}}</p>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-md-3" style="background: rgba(35, 68, 128, 0.74)">-->
+                                            <!--<p>{{caseStudyVm.cMatrix.false_negative}}</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="row cMatrix">-->
+                                        <!--<div class="col-md-3" style="background: rgba(0, 0, 139, 0.66)">-->
+                                            <!--<p>{{caseStudyVm.cMatrix.false_positive}}</p>-->
+                                        <!--</div>-->
+                                        <!--<div class="col-md-3" style="background: rgba(117, 8, 8, 0.89)">-->
+                                            <!--<p>{{caseStudyVm.cMatrix.true_negative}}</p>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <!--</section>-->
     </div>
 
 

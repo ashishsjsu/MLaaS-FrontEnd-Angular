@@ -12,3 +12,36 @@
     text-align: center;
     padding: 10px;
 }
+
+.cMatrix {
+    margin-left: 150px;
+}
+
+.cMatrix div {
+    cursor: pointer;
+    width: 100px; height: 100px; border: 5px solid white;
+    -webkit-transition: width 0.5s, height 0.5s;
+}
+
+.cMatrix div:hover {
+    width: 105px;
+    height: 105px;
+}
+
+.cMatrix p {
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 900;
+    position: absolute;
+    padding: 28px 0px 0px 0px;
+}
+
+@media (max-width: 991px){
+    .cMatrix {
+        max-width: 100px;
+        float: left;
+        margin-left: 14px;
+    }
+}
+

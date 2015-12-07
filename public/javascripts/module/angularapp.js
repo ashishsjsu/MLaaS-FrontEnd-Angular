@@ -4,5 +4,6 @@ angular
         'ui.router',
         'ngMaterial',
         'ngStorage',
-        "highcharts-ng"
+        "highcharts-ng",
+        'ngAnimate'
     ]);

@@ -1,0 +1,28 @@
+.view-animate-container {
+    position: relative;
+    overflow: hidden;
+    height:100%;
+}
+
+.view-animate-container > .slide.ng-enter,
+.view-animate-container > .slide.ng-leave {
+    -webkit-transition: all ease 0.5s;
+    -moz-transition: all ease 0.5s;
+    -o-transition: all ease 0.5s;
+    transition: all ease 0.5s;
+    width: 100%;
+    position:absolute;
+}
+
+.view-animate-container > .slide.ng-enter {
+    right:100%;
+    opacity: 0;
+}
+.view-animate-container > .slide.ng-enter.ng-enter-active {
+    right:0;
+    opacity: 1;
+}
+.view-animate-container > .slide.ng-leave.ng-leave-active {
+    left: -100%;
+    opacity: 0;
+}
