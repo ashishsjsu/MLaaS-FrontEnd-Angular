@@ -40,8 +40,7 @@ require('./modules/passportconfig').configurePassportAuthentication(passport);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-//app.use(favicon(path.join(__dirname, 'public', 'images','favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'images','icon.ico')));
 app.use(logger('dev'));
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');

@@ -21,9 +21,13 @@
         caseStudyVm.cMatrix = {};
 
         caseStudyVm.splineChart = {};
+        caseStudyVm.lineChart = {};
         caseStudyVm.splineData = null;
         caseStudyVm.init = init;
 
+        caseStudyVm.initializeConfusionMatrix = initializeConfusionMatrix;
+        caseStudyVm.setMarker = setMarker;
+        caseStudyVm.loadPrecisionCharts = loadPrecisionCharts;
         caseStudyVm.getPrecisionChartData = getPrecisionChartData;
         caseStudyVm.handleSplineClick = handleSplineClick;
         caseStudyVm.getConfusionMatrix = getConfusionMatrix;
@@ -43,26 +47,60 @@
             angular.element('#confusionMatrix').css('visibility', 'hidden').css('min-height','0').css('height', '0');
         }
 
+
+        function loadPrecisionCharts() {
+            getFmeasureRecallSpline();
+            getPrecisionChartData();
+        }
+
         /**
          * Get data to plot line chart of precision vs. # of estimators
          */
         function getPrecisionChartData() {
-            var precision = [];
-            var accuracy = [];
+            var precision = 80;
+            var estimators = 100;
+            var point = [];
+            var points = [];
+
             var data = $localStorage.splineData;
-            for(var i=0; i<splineData.length; i++){
-                angular.forEach(splineData[i], function(item, key){
-                    if(key === 'precision'){
-                        precision.push(item);
-                    }
-                    if(key === 'accuracy') {
-                        accuracy.push(item);
-                    }
-                });
+
+            if(data !== undefined || data !== null) {
+                for (var i = 0; i < data.length; i++) {
+                    angular.forEach(data[i], function (item, key) {
+                        if (key === 'precision') {
+                            precision = item;
+                        }
+                        if(key === 'estimators') {
+                            estimators = item;
+                        }
+                    });
+                    point = [estimators, precision];
+                    points.push(point);
+                }
             }
 
-            var chart = configureHighchartsLineNg(precision, accuracy);
+            var chart = configureHighchartsLineNg(points);
+            caseStudyVm.lineChart = chart;
             return chart;
+        }
+
+
+        /**
+         * Set marker on given point on a chart
+         * @param point
+         */
+        function setMarker(point) {
+
+        }
+
+        /**
+         * to fill the confusion matrix first time a spline chart is loaded
+         */
+        function initializeConfusionMatrix(chart) {
+            // load confusion matrix for the last point
+            var len = chart.series[0].data.length;
+            var lastPoint = chart.series[0].data[len-1];
+            getConfusionMatrix(lastPoint[0], lastPoint[1]);
         }
 
         /**
@@ -71,6 +109,8 @@
          * @param fmeasure
          */
         function getConfusionMatrix(recall, fmeasure) {
+
+            angular.element('#confusionMatrix').css('visibility', 'visible').css('min-height','250px').css('height', 'auto');
             caseStudyService.getConfusionMatrix(recall, fmeasure).then(function(response){
                 if(!response.data.isError) {
                     angular.element('#confusionMatrix').css('visibility', 'visible').css('min-height', '250px').css('height', 'auto');
@@ -95,8 +135,8 @@
         function getFmeasureRecallSpline() {
 
             angular.element('#sectionSpline').css('visibility', 'visible').css('min-height', '250px').css('height', 'auto');
-            caseStudyVm.section3 = "partials/casestudy-section3.html";
             angular.element('#btnShowCharts').css('display', 'none');
+            caseStudyVm.section3 = "partials/casestudy-section3.html";
 
             caseStudyService.getSplineData().then(function(response){
                if(!response.data.isError) {
@@ -128,11 +168,11 @@
                    var chart = configureHighchartsSplineNg(points);
                    caseStudyVm.splineChart = chart;
                    // custom formatter function for tooltip
-                   chart.options.tooltip.formatter = label;
+                   chart.options.tooltip.formatter = splineLabel;
                    // attach a function to handle point clicks on the chart
                    chart.series[0].point.events.click = caseStudyVm.handleSplineClick;
+                   initializeConfusionMatrix(chart);
                    return chart;
-
                }
             });
         }
@@ -141,16 +181,13 @@
          * Custom tooltip formatter for the spline chart
          * @returns {string}
          */
-        function label() {
+        function splineLabel() {
             var point = this;
             var splineData = caseStudyVm.splineData;
-            var flag = false;
             var max_depth = 20;
             var estimators = 100;
 
             for(var i=0; i<splineData.length; i++){
-                flag = false;
-
                 if(splineData[i].recall === point.x && splineData[i].f1 === point.y) {
                     max_depth = splineData[i].max_depth;
                     estimators = splineData[i].estimators;
@@ -262,15 +299,19 @@
             return chartConfig;
         }
 
-        function configureHighchartsLineNg(precision, accuracy) {
+        function configureHighchartsLineNg(data) {
             var chartConfig = {
                 options: {
                     chart: {
-                        type: 'line'
+                        type: 'spline'
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return " Precision: " + this.y + "<br> Estimators: " + this.x;
+                        }
                     }
                 },
                 xAxis: {
-                    categories: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100],
                     title: {
                         text: 'Estimators'
                     }
@@ -282,15 +323,14 @@
                     }
                 },
                 series: [{
-                    name: 'Accuracy',
-                    data: accuracy
-                },
-                    {
-                        name: 'Precision',
-                        data: precision
-                    }],
+                    name: 'Precision',
+                    data: data,
+                    marker: {
+                        enabled: true
+                    },
+                }],
                 title: {
-                    text: 'Precision, Accuracy vs. # of Estimators'
+                    text: 'Precision vs. # of Estimators'
                 },
                 loading: false
             }
