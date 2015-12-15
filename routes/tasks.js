@@ -65,7 +65,7 @@ function createRawStatisticsTaskMetadata(req, res, taskname) {
        if(err) {
            object.isError = true;
            object.errorMessage = err;
-           object.type = httpStatus.INTERNAL_SERVER_ERROR;
+           object.type = httpStatus.OK;
            //console.log(err);
            deferred.resolve(object);
        }
@@ -115,7 +115,7 @@ function enqueueTask(type, datasource, taskDocId) {
              console.log('Error updating task metadata : ' + err);
              object.isError = true;
              object.data = responsedata;
-             object.type = httpStatus.INTERNAL_SERVER_ERROR;
+             object.type = httpStatus.OK;
              deferred.resolve(object);
          }
          else {
@@ -149,6 +149,17 @@ router.post('/', function(req, res, next){
             });
         });
     }
+
+    if(req.query.type.toLowerCase() === "transformation") {
+        createRawStatisticsTaskMetadata(req, res, 'Data transformation').done(function(obj) {
+
+            enqueueTask('transform', req.body.filename, obj.data).done(function(obj){
+                response(obj, httpStatus.OK, res);
+            });
+        });
+    }
+
+
 });
 
 /**

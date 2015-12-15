@@ -33,10 +33,11 @@ function configure($stateProvider, $urlRouterProvider){
        controller: 'analyticsController',
        controllerAs: 'anaVm',
        resolve: {
-           isAuthenticated: isAuthenticated,
+           //isAuthenticated: isAuthenticated,
            dataSourceProvider: getDatasourceList,
            taskHistoryProvider: getTaskHistoryList,
-           algorithmsProvider: getAlgorithmsList
+           algorithmsProvider: getAlgorithmsList,
+           taskHistoryProvider: getTaskHistoryList
        }
     });
 

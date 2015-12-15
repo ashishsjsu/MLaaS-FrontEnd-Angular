@@ -22,7 +22,6 @@
         self.sampleData = null; //keep it null, don't change to undefined
         self.rawStatistics = undefined;
         self.chartConfig = {};
-
         // functions
         self.init = init;
         self.updateSelection = updateSelection;
@@ -62,15 +61,22 @@
          */
         function getResults(statusUrl){
             homeService.getTaskResults(statusUrl).then(function(response){
-                var result = JSON.parse(response.data.result);
-                var object = {};
-                for (var key in result) {
-                    if (result.hasOwnProperty(key)) {
-                        object[key] = result[key];
+
+                if(response.data.result !== ""){
+                    self.sectionRawStats = "partials/home-sectionrawstats.html";
+                    var result = JSON.parse(response.data.result);
+                    var object = {};
+                    for (var key in result) {
+                        if (result.hasOwnProperty(key)) {
+                            object[key] = result[key];
+                        }
                     }
+                    self.rawStatistics = object;
+                    plotRawStatistics(object);
                 }
-                self.rawStatistics = object;
-                plotRawStatistics(object);
+                else{
+                    alert("Request in progress");
+                }
             });
         }
 
@@ -84,7 +90,7 @@
                     if(!response.data.isError && response.status == 200){
                         //angular.copy(response.data.data, self.rawStatistics);
                         //prepend newly created task to the task history array
-                        self.taskHistory.data.unshift(response.data);
+                        self.taskHistory.data.push(response.data);
                     }
                     else{
                         console.log("Error: " + response.data);
@@ -147,18 +153,7 @@
                 },
                 series: [{
                     name: 'Raw Statistics',
-                    data: [
-                        /* { name: 'Microsoft Internet Explorer', y: 56.33 },
-                         {
-                         name: 'Chrome',
-                         y: 24.03,
-                         sliced: true,
-                         selected: true
-                         },
-                         { name: 'Firefox', y: 10.38 },
-                         { name: 'Safari', y: 4.77 }, { name: 'Opera', y: 0.91 },
-                         { name: 'Proprietary or Undetectable', y: 0.2 } */
-                    ]
+                    data: []
                 }]
             }
 

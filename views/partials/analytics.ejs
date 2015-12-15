@@ -1,7 +1,7 @@
 <div class="wrapper" style="background: #F3F3F3">
     <body-header></body-header>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="margin-left: 0; margin-bottom: 250px;">
         <section class="content">
             <div class="row">
                 <div class="col-md-5">
@@ -15,15 +15,47 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <h5 class="box-title">Select data source:</h5>
-                                <select class="form-control datasource-select" id="datasource-select" ng-model="anaVm.selectDatasource" ng-options="datasource.filename as datasource.filename for datasource in anaVm.datasourceList.data">
+                                <select class="form-control datasource-select" id="datasource-select" ng-model="anaVm.selectDatasource" ng-change="anaVm.updateDatasourceSelection()" ng-options="datasource.filename as datasource.filename for datasource in anaVm.datasourceList.data">
                                     <option value=""><---------- Select data source ----------></option>
                                 </select>
                             </div>
+                            <div ng-repeat="item in anaVm.columnsList" class="checkbox">
+                                <input type="checkbox" style="margin-left: 0" checkbox-group />
+                                <label>{{item}}</label>
+                            </div>
                         </div>
+
                     </div> <!-- box -->
                 </div><!-- col -->
 
-                <div class="col-md-7">
+                <div class="col-md-6">
+                    <div class="box box-danger">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Preprocessing</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div> <!-- box header -->
+                        <div class="box-body">
+                            <div class="form-group">
+                                <h5 class="box-title">Select a method</h5>
+                                <select class="form-control datasource-select algorithm-select" ng-change="anaVm.updatePreprocessSelection()" id="algorithm-select" ng-model="anaVm.selectPreprocessMethod">
+                                    <option value=""><---------- Select a preprocessing method ----------></option>
+                                    <option>Transformation</option>
+                                    <option>Data cleaning</option>
+                                    <option>Data reduction</option>
+                                </select>
+                            </div>
+                            <div style="text-align: center">
+                              <button class="btn btn-info btn-block btn-flat btnStats" ng-click="anaVm.transformData()">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
                     <div class="box box-danger">
                         <div class="box-header with-border">
                             <h3 class="box-title">Algorithms</h3>
@@ -35,7 +67,7 @@
                             <div class="form-group">
                                 <h5 class="box-title">Select algorithm</h5>
                                 <select class="form-control datasource-select algorithm-select" ng-change="anaVm.updateAlgorithmSelection()" id="algorithm-select" ng-model="anaVm.selectAlgorithm" ng-options="algorithm.name as algorithm.name for algorithm in anaVm.algorithms.data">
-                                    <option value=""><---------- Select data source ----------></option>
+                                    <option value=""><---------- Select algorithm ----------></option>
                                 </select>
                             </div>
                         </div>
@@ -43,6 +75,46 @@
                 </div>
 
 
+            </div> <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Include task-history block -->
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Task history</h3>
+                            <div class="box-tools pull-right">
+                                <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-history-icon"></i>
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table class="table no-margin task-history">
+                                    <thead>
+                                    <th>Select</th>
+                                    <th>Task Type</th>
+                                    <th>Task Id</th>
+                                    <th>Task Status URL</th>
+                                    <th>Dataset</th>
+                                    <th>Created</th>
+                                    </thead>
+
+                                    <tbody ng-repeat="task in anaVm.taskHistory.data">
+                                    <tr>
+                                        <td><input type="checkbox" id="{{task._id}}" /></td>
+                                        <td><span>{{task.tasktype}}</span></td>
+                                        <td><span>{{task.taskid}}</span></td>
+                                        <td><a href="{{task.statusurl}}" target="_blank" ng-click="homeVm.getResults(task.statusurl)">{{task.statusurl}}</a></td>
+                                        <td><span>{{task.datasource}}</span></td>
+                                        <td><span>{{task.created}}</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>       <!-- Task History Box-->
+                </div>
             </div> <!-- row -->
         </section> <!-- content -->
     </div> <!-- content-wrapper -->

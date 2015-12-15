@@ -11,6 +11,19 @@
         var analyticsObject = {};
 
         analyticsObject.getAlgorithmsList = getAlgorithmsList;
+        analyticsObject.transformDataTask = transformDataTask;
+
+        /**
+         * create a new task for data transformation
+         * @param file
+         * @returns {*}
+         */
+
+        function transformDataTask(file) {
+
+            var url = "/tasks?type=transformation";
+            return $http.post(url, {filename: file});
+        }
 
         /**
          * Get a list of algorithms available for analytics

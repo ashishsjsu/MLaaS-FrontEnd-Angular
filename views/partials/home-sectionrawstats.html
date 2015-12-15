@@ -1,0 +1,51 @@
+<div class="row slide">
+    <div class='col-md-12'>
+        <!-- Include raw stats results block -->
+        <div class="box box-danger">
+            <div class="box-header with-border">
+                <h3 class="box-title">Raw Statistics Results</h3>
+                <div class="box-tools pull-right">
+                    <i class="fa fa-refresh fa-sm icon-refresh" id="refresh-raw-result-icon"></i>
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="table-responsive raw-stats-block">
+                    <div class="col-md-8">
+                        <table class="table task-result">
+                            <thead>
+                            <th>Column</th>
+                            <th>Unique Values</th>
+                            </thead>
+                            <tbody ng-repeat="(key, value) in homeVm.rawStatistics">
+                            <tr>
+                                <td><span>{{key}}</span></td>
+                                <td><span>{{value}}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-danger">
+            <div class="box-header with-border">
+                <h3 class="box-title">Raw Statistics Chart</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div> <!-- box header -->
+            <div class="box-body">
+
+                <highchart id="chart1" config="homeVm.chartConfig" class="span10"></highchart>
+
+            </div>
+        </div>
+    </div>
+</div>

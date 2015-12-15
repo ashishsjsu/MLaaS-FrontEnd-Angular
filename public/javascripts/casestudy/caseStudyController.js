@@ -42,16 +42,25 @@
         init();
 
         function init() {
-            angular.element('#sectionMoreInfo').css('visibility', 'hidden').css('min-height','0').css('height', '0');
-            angular.element('#sectionSpline').css('visibility', 'hidden').css('min-height','0').css('height', '0');
-            angular.element('#confusionMatrix').css('visibility', 'hidden').css('min-height','0').css('height', '0');
+           // angular.element('#sectionMoreInfo').css('visibility', 'hidden').css('min-height','0').css('height', '0');
+            //angular.element('#sectionSpline').css('visibility', 'hidden').css('min-height','0').css('height', '0');
+            //angular.element('#confusionMatrix').css('visibility', 'hidden').css('min-height','0').css('height', '0');
         }
 
-
+        /**
+         * Creates fmeasure vs recall and precision chart
+         */
         function loadPrecisionCharts() {
-            getFmeasureRecallSpline();
-            getPrecisionChartData();
+
+            caseStudyService.getSplineData().then(function(response) {
+                if(!response.data.isError) {
+                    caseStudyVm.splineData = response.data.data;
+                    getFmeasureRecallSpline();
+                    getPrecisionChartData();
+                }
+            });
         }
+
 
         /**
          * Get data to plot line chart of precision vs. # of estimators
@@ -59,10 +68,11 @@
         function getPrecisionChartData() {
             var precision = 80;
             var estimators = 100;
+            var test_error = 0;
             var point = [];
-            var points = [];
+            var points = [], otherPoints = [];
 
-            var data = $localStorage.splineData;
+            var data = caseStudyVm.splineData;
 
             if(data !== undefined || data !== null) {
                 for (var i = 0; i < data.length; i++) {
@@ -73,13 +83,18 @@
                         if(key === 'estimators') {
                             estimators = item;
                         }
+                        if(key === 'test_error') {
+                            test_error = item * 100;
+                        }
                     });
                     point = [estimators, precision];
                     points.push(point);
+                    point = [estimators, test_error];
+                    otherPoints.push(point);
                 }
             }
 
-            var chart = configureHighchartsLineNg(points);
+            var chart = configureHighchartsLineNg(points, otherPoints);
             caseStudyVm.lineChart = chart;
             return chart;
         }
@@ -138,43 +153,41 @@
             angular.element('#btnShowCharts').css('display', 'none');
             caseStudyVm.section3 = "partials/casestudy-section3.html";
 
-            caseStudyService.getSplineData().then(function(response){
-               if(!response.data.isError) {
-                   var recall = 0;
-                   var fmeasure = 0;
+            var splineData = caseStudyVm.splineData;
+            var recall = 0;
+             var fmeasure = 0;
                    var maxDepth = 0;
                    var points = [];
-                   var splineData = response.data.data;
-                   caseStudyVm.splineData = splineData;
-                   //store the data in localStorage for further use
-                   $localStorage.splineData = splineData;
+            for(var i=0; i<splineData.length; i++){
+                angular.forEach(splineData[i], function(item, key){
+                    if(key === 'recall'){
+                        recall = item;
+                    }
+                    if(key === 'f1') {
+                        fmeasure = item;
+                    }
+                    if(key === 'max_depth') {
+                        maxDepth = item;
+                    }
+                });
+                var point = [recall, fmeasure, {'max_depth':maxDepth} ];
+                points.push(point);
+            }
 
-                   for(var i=0; i<splineData.length; i++){
-                       angular.forEach(splineData[i], function(item, key){
-                           if(key === 'recall'){
-                               recall = item;
-                           }
-                           if(key === 'f1') {
-                               fmeasure = item;
-                           }
-                           if(key === 'max_depth') {
-                                maxDepth = item;
-                           }
-                       });
-                       var point = [recall, fmeasure, {'max_depth':maxDepth} ];
-                       points.push(point);
-                   }
+            var object = {
+                xLabel : 'Recall',
+                yLabel: 'F Measure',
+                data: points
+            }
 
-                   var chart = configureHighchartsSplineNg(points);
-                   caseStudyVm.splineChart = chart;
-                   // custom formatter function for tooltip
-                   chart.options.tooltip.formatter = splineLabel;
-                   // attach a function to handle point clicks on the chart
-                   chart.series[0].point.events.click = caseStudyVm.handleSplineClick;
-                   initializeConfusionMatrix(chart);
-                   return chart;
-               }
-            });
+            var chart = configureHighchartsSplineNg(object);
+            caseStudyVm.splineChart = chart;
+            // custom formatter function for tooltip
+            chart.options.tooltip.formatter = splineLabel;
+            // attach a function to handle point clicks on the chart
+            chart.series[0].point.events.click = caseStudyVm.handleSplineClick;
+            initializeConfusionMatrix(chart);
+            return chart;
         }
 
         /**
@@ -299,7 +312,7 @@
             return chartConfig;
         }
 
-        function configureHighchartsLineNg(data) {
+        function configureHighchartsLineNg(data, moreData) {
             var chartConfig = {
                 options: {
                     chart: {
@@ -328,9 +341,16 @@
                     marker: {
                         enabled: true
                     },
-                }],
+                },
+                    {
+                        name: 'Test Error',
+                        data: moreData,
+                        marker: {
+                            enabled: true
+                        }
+                    }],
                 title: {
-                    text: 'Precision vs. # of Estimators'
+                    text: 'Algorithm performance for variable number of Estimators'
                 },
                 loading: false
             }
@@ -343,7 +363,7 @@
                 options: {
                     chart: {
                         type: 'spline',
-                        zoomType: 'x',
+                        zoomType: 'xy',
                         inverted: false
                     },
                     spline: {
@@ -366,7 +386,7 @@
                     reversed: false,
                     title: {
                         enabled: true,
-                        text: 'recall'
+                        text: data.xLabel
                     },
                     labels: {
                         formatter: function () {
@@ -378,7 +398,7 @@
                 },
                 yAxis: {
                     title: {
-                        text: 'F measure'
+                        text: data.yLabel
                     },
                     labels: {
                         formatter: function () {
@@ -391,7 +411,8 @@
                     enabled: true
                 },
                 series: [{
-                    data: data,
+                    name: 'F1 score vs. recall',
+                    data: data.data,
                     marker: {
                         enabled: true
                     },
